@@ -1,4 +1,6 @@
 from enum import Enum
+from htmlnode import HTMLNode
+from leafnode import LeafNode
 
 
 class TextType(Enum):
@@ -17,9 +19,9 @@ class TextNode():
         self.url = url
 
     def __eq__(self, other):
-        if self.text != other.text:
-            return False
         if self.text_type != other.text_type:
+            return False
+        if self.text != other.text:
             return False
         if self.url != other.url:
             return False
@@ -30,7 +32,7 @@ class TextNode():
 
 
 def text_node_to_html_node(text_node):
-    match text_node:
+    match text_node.text_type:
         case TextType.NORMAL:
             return LeafNode(None, text_node.text)
         case TextType.BOLD:
