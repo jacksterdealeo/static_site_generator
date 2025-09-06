@@ -36,3 +36,8 @@ class TestSplitNodesDelimiter(unittest.TestCase):
                 TextNode(" sudo sandwitch", TextType.CODE),
             ]
         )
+
+    def test_missing_delimiter(self):
+        with self.assertRaises(Exception):
+            node = TextNode("Mistakes **were made.", TextType.TEXT)
+            split_nodes_delimiter([node], "**", TextType.CODE)
