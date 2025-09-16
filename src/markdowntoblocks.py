@@ -1,13 +1,8 @@
 from enum import Enum
 import re
 
-from textnode import TextNode
-from textnode import text_to_textnodes
 
-
-# takes markdown:string
-# returns list[string]
-def markdown_to_blocks(markdown):
+def markdown_to_blocks(markdown: str) -> list[str]:
     result = []
     blocks = markdown.split("\n\n")
     for block in blocks:
@@ -27,10 +22,7 @@ class BlockType(Enum):
     ORDERED_LIST = "ordered_list"
 
 
-# takes markdown:string
-# returns BlockType
-def block_to_block_type(markdown):
-    pass
+def block_to_block_type(markdown: str) -> BlockType:
     if re.match(r"(#){1,6}( )", markdown) is not None:
         return BlockType.HEADING
     if re.match(r"(`){3}", markdown) is not None and re.search(r"((`){3}$)", markdown) is not None:

@@ -3,8 +3,11 @@ from textnode import TextType
 
 
 def main():
-    node = TextNode("Hello, Larl.", TextType.LINK.value,
-                    "https://docs.python.org/3/library/enum.html")
+    node = TextNode(
+        "Hello, Larl.",
+        TextType.LINK,
+        "https://docs.python.org/3/library/enum.html"
+    )
     print(node)
 
 

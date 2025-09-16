@@ -1,5 +1,6 @@
 import re
 from enum import Enum
+
 from leafnode import LeafNode
 
 
@@ -13,7 +14,12 @@ class TextType(Enum):
 
 
 class TextNode():
-    def __init__(self, text, text_type, url=None):
+    def __init__(
+        self,
+        text: str,
+        text_type: TextType,
+        url: str | None = None
+    ):
         self.text = text
         self.text_type = text_type
         self.url = url
@@ -31,9 +37,11 @@ class TextNode():
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
 
 
-# takes old_nodes:list[TextNode], dilimiter:string, text_type:TextType
-# returns list[TextNode]
-def split_nodes_delimiter(old_nodes, delimiter, text_type):
+def split_nodes_delimiter(
+        old_nodes: list[TextNode],
+        delimiter: str,
+        text_type: TextType
+) -> list[TextNode]:
     result = []
     for old_node in old_nodes:
         if old_node.text_type != TextType.TEXT:
@@ -55,9 +63,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
     return result
 
 
-# takes text:string
-# returns list[TextNode]
-def text_to_textnodes(text):
+def text_to_textnodes(text: str) -> list[TextNode]:
     nodes = [TextNode(text, TextType.TEXT)]
     nodes = split_nodes_image(nodes)
     nodes = split_nodes_link(nodes)
@@ -72,9 +78,7 @@ def text_to_textnodes(text):
     return nodes
 
 
-# takes text_node:TextNode
-# returns LeafNode
-def text_node_to_html_node(text_node):
+def text_node_to_html_node(text_node: TextNode) -> LeafNode:
     match text_node.text_type:
         case TextType.TEXT:
             return LeafNode(None, text_node.text)
@@ -92,21 +96,17 @@ def text_node_to_html_node(text_node):
             pass
 
 
-# takes text:string
-# returns list[tuple(alt_text:string, URL:string)]
-def extract_markdown_images(text):
+def extract_markdown_images(text: str) -> list[tuple[str, str]]:
+    """Return a list of tuples containing alt-text and URL pairs."""
     return re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
 
 
-# takes text:string
-# returns list[tuple(anchor_text:string, URL:string)]
-def extract_markdown_links(text):
+def extract_markdown_links(text: str) -> list[tuple[str, str]]:
+    """Return a list of tuples containing anchor-text and URL pairs."""
     return re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
 
 
-# takes list[TextNode]
-# returns list[TextNode]
-def split_nodes_image(old_nodes):
+def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     result = []
     for old_node in old_nodes:
         if old_node.text_type != TextType.TEXT:
@@ -131,9 +131,7 @@ def split_nodes_image(old_nodes):
     return result
 
 
-# takes list[TextNode]
-# returns list[TextNode]
-def split_nodes_link(old_nodes):
+def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
     result = []
     for old_node in old_nodes:
         if old_node.text_type != TextType.TEXT:
