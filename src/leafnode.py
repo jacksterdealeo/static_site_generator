@@ -6,9 +6,9 @@ class LeafNode(HTMLNode):
         self,
         tag: str | None = None,
         value: str | None = None,
-        props: dict[str, str] | None = None
+        props: dict[str, str | None] | None = None
     ):
-        super().__init__(self, tag, value, props)
+        super().__init__(tag, value, None, props)
         self.tag = tag
         self.value = value
         self.props = props
