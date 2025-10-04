@@ -1,8 +1,9 @@
 from enum import Enum
 import re
 
-
+from leafnode import LeafNode
 from parentnode import ParentNode
+from htmlnode import HTMLNode
 from textnode import (
     text_to_textnodes, text_node_to_html_node, TextNode, TextType
 )
@@ -79,7 +80,7 @@ def block_to_html_node(block: str) -> ParentNode:
     raise ValueError("invalid block type")
 
 
-def text_to_children(text):
+def text_to_children(text: str) -> list[LeafNode | HTMLNode]:
     text_nodes = text_to_textnodes(text)
     children = []
     for text_node in text_nodes:
@@ -88,14 +89,14 @@ def text_to_children(text):
     return children
 
 
-def paragraph_to_html_node(block):
+def paragraph_to_html_node(block: str) -> ParentNode:
     lines = block.split("\n")
     paragraph = " ".join(lines)
     children = text_to_children(paragraph)
     return ParentNode("p", children)
 
 
-def heading_to_html_node(block):
+def heading_to_html_node(block: str) -> ParentNode:
     level = 0
     for char in block:
         if char == "#":
@@ -109,7 +110,7 @@ def heading_to_html_node(block):
     return ParentNode(f"h{level}", children)
 
 
-def code_to_html_node(block):
+def code_to_html_node(block: str) -> ParentNode:
     if not block.startswith("```") or not block.endswith("```"):
         raise ValueError("invalid code block")
     text = block[4:-3]
@@ -119,7 +120,7 @@ def code_to_html_node(block):
     return ParentNode("pre", [code])
 
 
-def olist_to_html_node(block):
+def olist_to_html_node(block: str) -> ParentNode:
     items = block.split("\n")
     html_items = []
     for item in items:
@@ -129,7 +130,7 @@ def olist_to_html_node(block):
     return ParentNode("ol", html_items)
 
 
-def ulist_to_html_node(block):
+def ulist_to_html_node(block: str) -> ParentNode:
     items = block.split("\n")
     html_items = []
     for item in items:
@@ -139,7 +140,7 @@ def ulist_to_html_node(block):
     return ParentNode("ul", html_items)
 
 
-def quote_to_html_node(block):
+def quote_to_html_node(block: str) -> ParentNode:
     lines = block.split("\n")
     new_lines = []
     for line in lines:
