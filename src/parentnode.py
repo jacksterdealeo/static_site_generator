@@ -18,4 +18,4 @@ class ParentNode(HTMLNode):
             raise ValueError("The tag is missing.")
         if self.children is None or self.children == []:
             raise ValueError("The children are missing.")
-        return f"<{self.tag}>{' '.join(map(lambda x: x.to_html(), self.children))}</{self.tag}>"
+        return f"<{self.tag}>{''.join(map(lambda x: x.to_html(), self.children))}</{self.tag}>"
