@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from shutil import copy
 
 from textnode import TextNode
@@ -13,10 +14,10 @@ from extracttitle import extract_title
 def main():
     delete("./public")
     copy_rec("./static", "./public")
-    generate_page(
-        "content/index.md",
-        "template.html",
-        "public/index.html"
+    generate_pages_recursive(
+        "./content/",
+        "./template.html",
+        "./public/"
         )
 
     '''
@@ -60,6 +61,18 @@ def copy_rec(src: str, dst: str) -> None:
     print(f"Copying to {dst} done")
 
 
+def copy_directory_tree(src: str, dst: str) -> None:
+    src = os.path.abspath(src)
+    dst = os.path.abspath(dst)
+    if not os.path.exists(dst):
+        os.mkdir(dst)
+    for path in os.listdir(src):
+        full_path = os.path.join(src, path)
+        if os.path.isdir(full_path):
+            copy_rec(full_path, os.path.join(dst, path))
+    print(f"Copying directories to {dst} done")
+
+
 def read_text_file(path):
     with open(path, "r") as f:
         return f.read()
@@ -79,6 +92,29 @@ def generate_page(from_path, template_path, dest_path):
         os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_path, 'w') as f:
         f.write(page)
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    if not os.path.exists(dest_dir_path):
+        os.mkdir(dest_dir_path)
+
+    for filename in os.listdir(dir_path_content):
+        full_src = os.path.join(dir_path_content, filename)
+        full_dest = os.path.join(dest_dir_path, filename)
+
+
+        if os.path.isfile(full_src):
+            full_dest = os.path.join(dest_dir_path, Path(full_dest).stem + ".html")
+
+            print(f"Generating {full_src} -> {full_dest}")
+            generate_page(
+                full_src,
+                template_path,
+                full_dest)
+
+        elif os.path.isdir(full_src):
+            print(f"Making {full_src} -> {full_dest}")
+            generate_pages_recursive(full_src, template_path, full_dest)
+    print(f"Copying directories to {dest_dir_path} done")
 
 
 if __name__ == "__main__":
