@@ -1,23 +1,25 @@
 import os
 from pathlib import Path
 from shutil import copy
+import sys
 
-from textnode import TextNode
-from textnode import TextType
-from leafnode import LeafNode
-from htmlnode import HTMLNode
 from markdowntoblocks import markdown_to_html_node
 from extracttitle import extract_title
 
 
 
 def main():
-    delete("./public")
-    copy_rec("./static", "./public")
+    basepath = r"/"
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
+        
+    delete("./docs")
+    copy_rec("./static", "./docs")
     generate_pages_recursive(
+        basepath,
         "./content/",
         "./template.html",
-        "./public/"
+        "./docs/"
         )
 
     '''
@@ -78,42 +80,36 @@ def read_text_file(path):
         return f.read()
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(basepath, from_path, template_path, dest_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     markdown = read_text_file(from_path)
     page = read_text_file(template_path)
     page_HTMLnode = markdown_to_html_node(markdown)
     content = page_HTMLnode.to_html()
     title = extract_title(markdown)
-    page = page.replace(r"{{ Title }}", title)
-    page = page.replace(r"{{ Content }}", content)
+    page = page.replace('{{ Title }}', title)
+    page = page.replace('{{ Content }}', content)
+    page = page.replace('"href="/', 'href="' + basepath)
+    page = page.replace('src="/', 'src="' + basepath)
 
     if not os.path.exists(dest_path):
         os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_path, 'w') as f:
         f.write(page)
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(basepath, dir_path_content, template_path, dest_dir_path):
     if not os.path.exists(dest_dir_path):
         os.mkdir(dest_dir_path)
-
     for filename in os.listdir(dir_path_content):
         full_src = os.path.join(dir_path_content, filename)
         full_dest = os.path.join(dest_dir_path, filename)
-
-
         if os.path.isfile(full_src):
             full_dest = os.path.join(dest_dir_path, Path(full_dest).stem + ".html")
-
             print(f"Generating {full_src} -> {full_dest}")
-            generate_page(
-                full_src,
-                template_path,
-                full_dest)
-
+            generate_page(basepath, full_src, template_path, full_dest)
         elif os.path.isdir(full_src):
             print(f"Making {full_src} -> {full_dest}")
-            generate_pages_recursive(full_src, template_path, full_dest)
+            generate_pages_recursive(basepath, full_src, template_path, full_dest)
     print(f"Copying directories to {dest_dir_path} done")
 
 
