@@ -3,17 +3,31 @@ from shutil import copy
 
 from textnode import TextNode
 from textnode import TextType
+from leafnode import LeafNode
+from htmlnode import HTMLNode
+from markdowntoblocks import markdown_to_html_node
+from extracttitle import extract_title
+
 
 
 def main():
     delete("./public")
     copy_rec("./static", "./public")
+    generate_page(
+        "content/index.md",
+        "template.html",
+        "public/index.html"
+        )
+
+    '''
     node = TextNode(
         "Hello, Larl.",
         TextType.LINK,
         "https://docs.python.org/3/library/enum.html"
     )
     print(node)
+    '''
+
 
 def delete(folder_path: str):
     if not os.path.exists(folder_path):
@@ -24,20 +38,13 @@ def delete(folder_path: str):
         try:
             if os.path.isfile(file_path):
                 os.remove(file_path)  
-            elif os.path.isdir(file_path):  
+            elif os.path.isdir(file_path):
+                delete(file_path)
                 os.rmdir(file_path)  
         except Exception as e:  
             print(f"Error deleting {file_path}: {e}")
     print("Deletion done")
 
-def copy_by_tree(src: str, dst: str) -> None:
-    os.makedirs(dst, exist_ok=True)
-    for root, dirs, files in os.walk(src):
-        rel = os.path.relpath(root, src)
-        target_dir = os.path.join(dst, rel)
-        os.makedirs(target_dir, exist_ok=True)
-        for file in files:
-            copy(os.path.join(root, file), os.path.join(target_dir, file))
 
 def copy_rec(src: str, dst: str) -> None:
     src = os.path.abspath(src)
@@ -51,6 +58,28 @@ def copy_rec(src: str, dst: str) -> None:
         elif os.path.isdir(full_path):
             copy_rec(full_path, os.path.join(dst, path))
     print(f"Copying to {dst} done")
+
+
+def read_text_file(path):
+    with open(path, "r") as f:
+        return f.read()
+
+
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    markdown = read_text_file(from_path)
+    page = read_text_file(template_path)
+    page_HTMLnode = markdown_to_html_node(markdown)
+    content = page_HTMLnode.to_html()
+    title = extract_title(markdown)
+    page = page.replace(r"{{ Title }}", title)
+    page = page.replace(r"{{ Content }}", content)
+
+    if not os.path.exists(dest_path):
+        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+    with open(dest_path, 'w') as f:
+        f.write(page)
+
 
 if __name__ == "__main__":
     main()
