@@ -13,7 +13,7 @@ def main():
     if len(sys.argv) > 1:
         basepath = sys.argv[1]
         
-    delete("./docs")
+    delete(os.path.join(basepath, "./docs"))
     copy_rec("./static", "./docs")
     generate_pages_recursive(
         basepath,
