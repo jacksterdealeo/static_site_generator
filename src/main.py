@@ -7,14 +7,26 @@ from markdowntoblocks import markdown_to_html_node
 from extracttitle import extract_title
 
 
+dir_path_static = "./static"
+dir_path_public = "./docs"
+dir_path_content = "./content"
+template_path = "./template.html"
+default_basepath = "/"
 
 def main():
-    basepath = r"/"
+    basepath = default_basepath
     if len(sys.argv) > 1:
         basepath = sys.argv[1]
+    
+    print(f"BASE PATH: {basepath}")
         
-    delete(os.path.join(basepath, "./docs"))
-    copy_rec("./static", "./docs")
+    print("Deleting public directory...")
+    delete(dir_path_public)
+
+    print("Copying static files to public directory...")
+    copy_rec(dir_path_static, dir_path_public)
+
+    print("Generating content...")
     generate_pages_recursive(
         basepath,
         "./content/",
@@ -80,7 +92,7 @@ def read_text_file(path):
         return f.read()
 
 
-def generate_page(basepath, from_path, template_path, dest_path):
+def generate_page(basepath: str, from_path: str, template_path: str, dest_path: str):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     markdown = read_text_file(from_path)
     page = read_text_file(template_path)
@@ -92,10 +104,13 @@ def generate_page(basepath, from_path, template_path, dest_path):
     page = page.replace('"href="/', 'href="' + basepath)
     page = page.replace('src="/', 'src="' + basepath)
 
-    if not os.path.exists(dest_path):
-        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-    with open(dest_path, 'w') as f:
-        f.write(page)
+    dest_dir_path = os.path.dirname(dest_path)
+    if dest_dir_path != "":
+        os.makedirs(dest_dir_path, exist_ok=True)
+    to_file = open(dest_path, "w")
+    to_file.write(page)
+    to_file.close()
+
 
 def generate_pages_recursive(basepath, dir_path_content, template_path, dest_dir_path):
     if not os.path.exists(dest_dir_path):
