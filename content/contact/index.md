@@ -1,9 +1,11 @@
-# Contact the Author
+# Contact
 
 [< Back Home](/)
 
-Give me a call anytime to chat about Tolkien!
+You can find my projects on Codeberg and Github:
 
-`555-555-5555`
+[codeberg.org/ostech](https://codeberg.org/ostech/)
 
-**"Váya márië."**
+[github.com/jacksterdealeo](https://github.com/jacksterdealeo/)
+
+

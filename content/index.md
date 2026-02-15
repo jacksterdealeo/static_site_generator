@@ -1,46 +1,24 @@
-# Tolkien Fan Club
+# Oswald's Home Site
 
-![JRR Tolkien sitting](/images/tolkien.png)
+![No Man's Sky Blue Sky and Car](/images/NMSBlueSkyandCar.jpg)
 
-Here's the deal, **I like Tolkien**.
-
-> "I am in fact a Hobbit in all but size."
->
-> -- J.R.R. Tolkien
+Welcome to my website. This is where I write about some of my experiences in programming and gaming.
 
 ## Blog posts
 
-- [Why Glorfindel is More Impressive than Legolas](/blog/glorfindel)
-- [Why Tom Bombadil Was a Mistake](/blog/tom)
-- [The Unparalleled Majesty of "The Lord of the Rings"](/blog/majesty)
+- [My Start Into Coding](/blog/my_start_into_coding)
+- [Texture Pack Converter](/blog/texture_pack_converter)
 
-## Reasons I like Tolkien
+## My Guidelines for Making Useful Software
 
-- You can spend years studying the legendarium and still not understand its depths
-- It can be enjoyed by children and adults alike
-- Disney _didn't ruin it_ (okay, but Amazon might have)
-- It created an entirely new genre of fantasy
+1. Make it easy to use for everyone.
+2. Make it easy to maintain for anyone.
+3. Make it easy to run anywhere.
+4. License responsibly. Don't just slap MIT or Apache on something just because you can.
 
-## My favorite characters (in order)
+Sometimes these guidelines don't apply, but I aspire to allow anyone to use the tools I make.
 
-1. Gandalf
-2. Bilbo
-3. Sam
-4. Glorfindel
-5. Galadriel
-6. Elrond
-7. Thorin
-8. Sauron
-9. Aragorn
 
-Here's what `elflang` looks like (the perfect coding language):
+Want to see my git repos or get in touch? [Contact me here](/contact).
 
-```
-func main(){
-    fmt.Println("Aiya, Ambar!")
-}
-```
-
-Want to get in touch? [Contact me here](/contact).
-
-This site was generated with a custom-built [static site generator](https://www.boot.dev/courses/build-static-site-generator-python) from the course on [Boot.dev](https://www.boot.dev).
+This site was generated with a [static site generator](https://www.boot.dev/courses/build-static-site-generator-python) from the course on [Boot.dev](https://www.boot.dev).
