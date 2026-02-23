@@ -19,3 +19,7 @@ class ParentNode(HTMLNode):
         if self.children is None or self.children == []:
             raise ValueError("The children are missing.")
         return f"<{self.tag}>{''.join(map(lambda x: x.to_html(), self.children))}</{self.tag}>"
+
+    def __repr__(self):
+        return f"HTMLNode({self.tag}, children: {self.children}, {self.props})"
+
